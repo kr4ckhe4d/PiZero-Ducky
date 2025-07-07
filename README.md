@@ -206,6 +206,57 @@ We'll use `systemd` to create a service that runs our scripts on boot.
 Congratulations! You've successfully built the core of your Raspberry Pi Rubber Ducky.
 
 ***
+# Part 5: Interactive Ducky Terminal (Live Mode)
+
+This advanced setup transforms your Pi Ducky from a pre-programmed device into a live, interactive tool. It hosts a web-based terminal, allowing you to send keystroke commands to the target computer in real-time from a web browser on your network.
+
+### How It Works
+
+This mode uses WebSockets to create a persistent, two-way connection between your browser and the Pi. When you type a command into the web terminal and press Enter, it's instantly sent to the Pi, which then executes it as a keystroke on the target machine. This is ideal for situations where you need to react to what's happening on the target's screen.
+
+### Step 1: Install Required Software
+
+This mode requires an additional Python library to handle WebSocket communication.
+
+```bash
+sudo apt install python3-flask-socketio -y
+```
+
+### Step 2: Create the Interactive App Script
+
+You will need a Python script that contains the Flask web server, the WebSocket handler, and the keyboard command logic all in one file.
+
+1.  Create the new script file:
+    ```bash
+    sudo nano /opt/payloads/interactive_ducky.py
+    ```
+2.  Copy the full contents of the `interactive_ducky.py` script into this file.
+
+### Step 3: How to Use the Interactive Terminal
+
+You will start the server manually each time you want to use it.
+
+1.  **Connect your Pi's USB data port** to the target computer.
+2.  **SSH into your Raspberry Pi.**
+3.  **Start the interactive server.** Run the following command from your terminal. The script will handle setting up the HID device and starting the web server.
+    ```bash
+    python3 /opt/payloads/interactive_ducky.py
+    ```
+    You will see output indicating that the server is running on `http://0.0.0.0:5000`. Keep this terminal window open; closing it will stop the server.
+4.  **Connect from your browser.** From another computer on the same WiFi network, open a web browser and navigate to `http://[YOUR_PI_IP_ADDRESS]:5000`.
+5.  **You will see a dark-themed terminal interface.** Type any valid Ducky Script command into the input box at the bottom and press **Enter**. The command will be executed immediately on the target computer.
+
+**Example Commands:**
+
+* `GUI r` - Opens the Windows Run dialog.
+* `STRING notepad` - Types the word "notepad".
+* `ENTER` - Presses the Enter key.
+* `STRING Hello, this is a live test!`
+* `CTRL a` - Selects all text.
+* `DELAY 2000` - Waits for 2 seconds.
+
+
+***
 
 ### **Troubleshooting and Next Steps**
 
